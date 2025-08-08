@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebM to MP4 Converter</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>WebM to MP4 Converter</h1>
+        <p>Drag and drop your WebM files to convert them to MP4</p>
+      </header>
+
+      <main>
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-zone-content">
+            <svg
+              class="upload-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17,8 12,3 7,8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            <h3>Drop WebM files here</h3>
+            <p>or click to browse</p>
+            <input type="file" id="fileInput" accept=".webm" multiple hidden />
+          </div>
+        </div>
+
+        <div class="file-list" id="fileList"></div>
+
+        <div class="settings-panel">
+          <h3>Conversion Settings</h3>
+
+          <div class="setting-group">
+            <label for="quality">Video Quality (kbps):</label>
+            <select id="quality">
+              <option value="">Default (Fast)</option>
+              <option value="500">500 kbps (Low Quality, Fast)</option>
+              <option value="1000">1000 kbps (Medium Quality)</option>
+              <option value="2000" selected>2000 kbps (High Quality)</option>
+              <option value="5000">5000 kbps (Very High Quality, Slow)</option>
+            </select>
+          </div>
+
+          <div class="setting-group">
+            <label for="fps">Frame Rate:</label>
+            <select id="fps">
+              <option value="">Default</option>
+              <option value="24">24 fps</option>
+              <option value="30" selected>30 fps</option>
+              <option value="60">60 fps</option>
+            </select>
+          </div>
+
+          <div class="setting-group">
+            <label for="scale">Resolution:</label>
+            <select id="scale">
+              <option value="" selected>Original</option>
+              <option value="640x480">640x480 (SD)</option>
+              <option value="1280x720">1280x720 (HD)</option>
+              <option value="1920x1080">1920x1080 (Full HD)</option>
+            </select>
+          </div>
+
+          <div class="setting-group">
+            <label for="audioCodec">Audio Codec:</label>
+            <select id="audioCodec">
+              <option value="aac" selected>AAC</option>
+              <option value="mp3">MP3</option>
+              <option value="copy">Copy Original</option>
+            </select>
+          </div>
+
+          <div class="output-folder">
+            <label>Output Folder:</label>
+            <div class="folder-selector">
+              <input
+                type="text"
+                id="outputPath"
+                readonly
+                placeholder="Select output folder..."
+              />
+              <button id="selectFolder" class="btn-secondary">Browse</button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="conversion-panel"
+          id="conversionPanel"
+          style="display: none"
+        >
+          <h3>Converting...</h3>
+          <div class="loader-container">
+            <div class="spinner"></div>
+          </div>
+          <div class="conversion-info" id="conversionInfo"></div>
+        </div>
+
+        <div class="action-buttons">
+          <button id="convertBtn" class="btn-primary" disabled>
+            Convert Files
+          </button>
+          <button id="abortBtn" class="btn-danger" style="display: none">
+            Abort Conversion
+          </button>
+          <button id="clearBtn" class="btn-secondary">Clear All</button>
+        </div>
+      </main>
+
+      <footer>
+        <div class="footer-content">
+          <p>Built with Electron and FFmpeg</p>
+          <div class="footer-links">
+            <a
+              href="https://github.com/Grenadine1776/webm-to-mp4"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer-link"
+            >
+              <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                />
+              </svg>
+              GitHub
+            </a>
+            <a
+              href="https://buymeacoffee.com/grenadine"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer-link coffee-link"
+            >
+              <svg class="coffee-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M20.216 6.415l-.132-.666c-.119-.598-.388-1.163-.766-1.623a4.596 4.596 0 0 0-1.364-1.24c-.253-.126-.53-.207-.816-.241-.316-.037-.634-.014-.948.070-.37.1-.718.299-1.015.574-.426.393-.731.914-.875 1.478l-.097.386c-.016.062-.027.125-.035.189-.543.738-.832 1.634-.832 2.563 0 .829.218 1.614.6 2.291.382.677.937 1.240 1.614 1.614.677.382 1.462.6 2.291.6.929 0 1.825-.289 2.563-.832.064-.008.127-.019.189-.035l.386-.097c.564-.144 1.085-.449 1.478-.875.275-.297.474-.645.574-1.015.084-.314.107-.632.07-.948-.034-.286-.115-.563-.241-.816a4.596 4.596 0 0 0-1.24-1.364c-.46-.378-1.025-.647-1.623-.766zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+              </svg>
+              Buy me a coffee
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>
