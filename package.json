@@ -63,6 +63,7 @@
     ],
     "compression": "maximum",
     "forceCodeSigning": false,
+    "publish": null,
     "win": {
       "target": [
         {
