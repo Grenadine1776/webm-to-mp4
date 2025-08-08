@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const ffmpeg = require("fluent-ffmpeg");
@@ -23,6 +23,20 @@ function createWindow() {
   });
 
   mainWindow.loadFile("index.html");
+
+  // Handle external links - open in default browser
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: "deny" };
+  });
+
+  // Handle navigation to external URLs
+  mainWindow.webContents.on("will-navigate", (event, url) => {
+    if (url !== mainWindow.webContents.getURL()) {
+      event.preventDefault();
+      shell.openExternal(url);
+    }
+  });
 
   // Show window when ready to prevent visual flash
   mainWindow.once("ready-to-show", () => {

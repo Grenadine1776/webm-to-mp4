@@ -36,9 +36,11 @@
     },
     "files": [
       "main.js",
+      "preload.js",
       "renderer.js",
       "index.html",
       "style.css",
+      "assets/**/*",
       "node_modules/**/*"
     ],
     "win": {
