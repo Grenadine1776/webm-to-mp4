@@ -24,11 +24,12 @@ Convert WebM files to MP4 with drag-and-drop simplicity.
 ### Download Release (Recommended)
 
 1. Go to the [Releases page](../../releases)
-2. Download the installer for your operating system:
-   - `WebM-to-MP4-Setup.exe` for Windows
-   - `WebM-to-MP4.dmg` for macOS
-   - `WebM-to-MP4.AppImage` for Linux
-3. Run the installer and launch the app
+2. Download the package for your operating system:
+   - `WebM to MP4 Converter-X.X.X-Windows.zip` for Windows
+   - `WebM to MP4 Converter-X.X.X-x64.dmg` for macOS (Intel)
+   - `WebM to MP4 Converter-X.X.X-arm64.dmg` for macOS (Apple Silicon)
+   - `WebM to MP4 Converter-X.X.X-x64.AppImage` for Linux
+3. Extract (Windows) or install (macOS/Linux) and launch the app
 
 **No additional software needed** - FFmpeg is bundled with the release.
 
@@ -60,10 +61,15 @@ To create distributable executables:
 
 ```bash
 npm install
-npm run build    # Creates executables in dist/ folder
+npm run build-win      # Windows ZIP package
+npm run build-mac      # macOS DMG (requires macOS)
+npm run build-linux    # Linux AppImage
+npm run build-all      # All platforms (requires appropriate OS)
 ```
 
-The built executables include FFmpeg and require no additional software.
+**Note:** Building for macOS requires running on macOS. Cross-compilation has limitations.
+
+Built executables include FFmpeg and require no additional software.
 
 ## Troubleshooting
 
