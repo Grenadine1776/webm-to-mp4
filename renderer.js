@@ -17,6 +17,7 @@ class WebMConverter {
     this.fileList = document.getElementById("fileList");
     this.convertBtn = document.getElementById("convertBtn");
     this.abortBtn = document.getElementById("abortBtn");
+    this.openFolderBtn = document.getElementById("openFolderBtn");
     this.clearBtn = document.getElementById("clearBtn");
     this.selectFolderBtn = document.getElementById("selectFolder");
     this.outputPathInput = document.getElementById("outputPath");
@@ -35,6 +36,7 @@ class WebMConverter {
     this.fileInput.addEventListener("change", (e) => this.handleFileSelect(e));
     this.convertBtn.addEventListener("click", () => this.startConversion());
     this.abortBtn.addEventListener("click", () => this.abortConversion());
+    this.openFolderBtn.addEventListener("click", () => this.openOutputFolder());
     this.clearBtn.addEventListener("click", () => this.clearFiles());
     this.selectFolderBtn.addEventListener("click", () =>
       this.selectOutputFolder()
@@ -194,6 +196,7 @@ class WebMConverter {
     this.files = [];
     this.updateUI();
     this.hideConversionPanel();
+    this.openFolderBtn.style.display = "none";
   }
 
   updateUI() {
@@ -234,6 +237,12 @@ class WebMConverter {
     if (folder) {
       this.outputFolder = folder;
       this.outputPathInput.value = folder;
+    }
+  }
+
+  async openOutputFolder() {
+    if (this.outputFolder) {
+      await window.electronAPI.openFolder(this.outputFolder);
     }
   }
 
@@ -357,6 +366,9 @@ class WebMConverter {
     this.abortBtn.style.display = "none";
 
     if (completedCount > 0) {
+      // Show "Open Output Folder" button when files are converted
+      this.openFolderBtn.style.display = "inline-block";
+
       if (completedCount === this.files.length) {
         this.showNotification(
           `Successfully converted ${completedCount} file(s)!`,
@@ -431,7 +443,8 @@ class WebMConverter {
   }
 
   onConversionComplete() {
-    // Individual file completion is handled in startConversion
+    // Hide conversion panel when all files are done
+    this.hideConversionPanel();
   }
 
   onConversionError(error) {

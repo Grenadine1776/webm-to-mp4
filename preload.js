@@ -29,4 +29,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   checkFileExists: (filePath) =>
     ipcRenderer.invoke("check-file-exists", filePath),
+
+  openFolder: (folderPath) => ipcRenderer.invoke("open-folder", folderPath),
 });

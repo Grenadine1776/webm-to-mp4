@@ -2,10 +2,24 @@ const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const ffmpeg = require("fluent-ffmpeg");
+const ffmpegInstaller = require("@ffmpeg-installer/ffmpeg");
 
 // Set FFmpeg path for different platforms
 const isDev = process.env.NODE_ENV === "development";
 const platform = process.platform;
+
+// Set FFmpeg binary path - handle both development and packaged app
+let ffmpegPath;
+if (app.isPackaged) {
+  // In packaged app, use the unpacked version
+  ffmpegPath = ffmpegInstaller.path.replace("app.asar", "app.asar.unpacked");
+} else {
+  // In development, use the normal path
+  ffmpegPath = ffmpegInstaller.path;
+}
+
+console.log("FFmpeg path:", ffmpegPath);
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -285,5 +299,14 @@ ipcMain.handle("check-file-exists", async (event, filePath) => {
     return fs.existsSync(filePath);
   } catch (error) {
     return false;
+  }
+});
+
+ipcMain.handle("open-folder", async (event, folderPath) => {
+  try {
+    shell.openPath(folderPath);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
   }
 });
